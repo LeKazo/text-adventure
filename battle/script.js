@@ -1,8 +1,57 @@
+//#region easter egg
+var allowedKeys = {
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down',
+  65: 'a',
+  66: 'b'
+};
+
+// the 'official' Konami Code sequence
+var konamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a'];
+
+// a variable to remember the 'position' the user has reached so far.
+var konamiCodePosition = 0;
+
+// add keydown event listener
+document.addEventListener('keydown', function(e) {
+  // get the value of the key code from the key map
+  var key = allowedKeys[e.keyCode];
+  // get the value of the required key from the konami code
+  var requiredKey = konamiCode[konamiCodePosition];
+
+  // compare the key with the required key
+  if (key == requiredKey) {
+
+    // move to the next key in the konami code sequence
+    konamiCodePosition++;
+
+    // if the last key is reached, activate cheats
+    if (konamiCodePosition == konamiCode.length) {
+      activateCheats();
+      konamiCodePosition = 0;
+    }
+  } else {
+    konamiCodePosition = 0;
+  }
+});
+
+function activateCheats() {
+
+  var audio = new Audio('images/found.mp3');
+  audio.play();
+
+  alert("cheats activated. ");
+}
+//#endregion
+//#region battle stats
+var master = []
 var randomRole = 0;
 
 var enemys = [
   {
-    'name': 'Ice Clan',
+    'name': 'Ice Clan Member',
     'type': 'Member',
     'specialAbility': 'Ice',
     'hp': 69,
@@ -38,14 +87,15 @@ var enemys = [
     'accuracy': 19,
   }
 ];
+//above is the sets for each enemy.
 
 var players = [
   {
     'name': 'Zika',
     'type': 'Half Dragon',
     'specialAbility': 'Flames',
-    'hp': 500,
-    'atk': 500,
+    'hp': 350,
+    'atk': 200,
     'evation': 1,
     'accuracy': 1,
   },
@@ -59,13 +109,14 @@ var players = [
     'accuracy': 15,
   }
 ]
+//the classes/sets for both of the two characters.
 
 function role(number) {
   randomRole = Math.random() * number | 0;
 }
 
 function start() {
-  console.clear()
+  master = []
   playerNumber = document.getElementById('playerNumber').value;
   enemyNumber = document.getElementById('enemyNumber').value;
 
@@ -88,13 +139,13 @@ function battle(playerNumber, enemyNumber) {
         if (enemys[enemyNumber].hp < 0) {
           enemys[enemyNumber].hp = 0;
         }
-        console.log(players[playerNumber].name + ' hits for ' + players[playerNumber].atk + ' damage. \n' + enemys[enemyNumber].name + ' health is now ' + enemys[enemyNumber].hp + ' hitpoints');
+        master.push(players[playerNumber].name + ' hits for ' + players[playerNumber].atk + ' damage. \n' + enemys[enemyNumber].name + ' health is now ' + enemys[enemyNumber].hp + ' hitpoints');
       } else {
-        console.log(enemys[enemyNumber].name + ' dodges');
+        master.push(enemys[enemyNumber].name + ' dodges');
       }
       //player hit role miss
     } else if (randomRole > players[playerNumber].accuracy) {
-      console.log(players[playerNumber].name + ' misses');
+      master.push(players[playerNumber].name + ' misses');
     }
 
     //enemy hit role
@@ -109,23 +160,24 @@ function battle(playerNumber, enemyNumber) {
         if (players[playerNumber].hp < 0) {
           players[playerNumber].hp = 0;
         }
-        console.log(enemys[enemyNumber].name + ' hits for ' + enemys[enemyNumber].atk + ' damage. \n' + players[playerNumber].name + ' health is now ' + players[playerNumber].hp + ' hitpoints');
+        master.push(enemys[enemyNumber].name + ' hits for ' + enemys[enemyNumber].atk + ' damage. \n' + players[playerNumber].name + ' health is now ' + players[playerNumber].hp + ' hitpoints');
       } else {
-        console.log(players[playerNumber].name + ' dodges');
+        master.push(players[playerNumber].name + ' dodges');
       }
       //player hit role miss
     } else if (randomRole > enemys[enemyNumber].accuracy) {
-      console.log(enemys[enemyNumber].name + ' misses');
+      master.push(enemys[enemyNumber].name + ' misses');
     }
 
     battle(playerNumber, enemyNumber);
   } else {
-    console.log('game over');
+    master.push('game over');
     if (players[playerNumber].hp <= 0) {
-      console.log('enemy wins!')
+      master.push('enemy wins!')
     } else if (enemys[enemyNumber].hp <= 0) {
-      console.log('player wins!')
+      master.push('player wins!')
     }
+
 
     //reset
     enemys[0].hp = 69;
@@ -135,5 +187,9 @@ function battle(playerNumber, enemyNumber) {
     players[0].hp = 500;
     players[1].hp = 40;
 
+    document.getElementById('battleresults').innerHTML = master.join('<br>')
+
   }
+
 }
+//#endregion

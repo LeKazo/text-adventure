@@ -1,3 +1,57 @@
+//#region easter egg
+var allowedKeys = {
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down',
+  65: 'a',
+  66: 'b'
+};
+
+// the 'official' Konami Code sequence
+var konamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a'];
+
+// a variable to remember the 'position' the user has reached so far.
+var konamiCodePosition = 0;
+
+// add keydown event listener
+document.addEventListener('keydown', function(e) {
+  // get the value of the key code from the key map
+  var key = allowedKeys[e.keyCode];
+  // get the value of the required key from the konami code
+  var requiredKey = konamiCode[konamiCodePosition];
+
+  // compare the key with the required key
+  if (key == requiredKey) {
+
+    // move to the next key in the konami code sequence
+    konamiCodePosition++;
+
+    // if the last key is reached, activate cheats
+    if (konamiCodePosition == konamiCode.length) {
+      activateCheats();
+      konamiCodePosition = 0;
+    }
+  } else {
+    konamiCodePosition = 0;
+  }
+});
+
+function activateCheats() {
+
+  var audio = new Audio('images/found.mp3');
+  audio.play();
+
+  if (window.confirm('cheats activated, click ok to continue')) 
+  {
+    window.location.href='https://youtu.be/pG5omcvhfOQ';
+  };
+}
+
+alert("Howdy! welcome to the text based game!! woo!");
+//#endregion
+
+//#region text options
 const textElement = document.getElementById('text')
 const optionButtonsElement = document.getElementById('option-buttons')
 
@@ -179,7 +233,7 @@ const textNodes = [
   },
   {
     id: 11,
-    text: 'Yyou attack the member, but realize that was the leader of the outpost, so the other members retreat. you successfully captured the outpost, but your journey doesnt end there...',
+    text: 'you attack the member, but realize that was the leader of the outpost, so the other members retreat. you successfully captured the outpost, but your journey doesnt end there...',
     options: [
       {
         text: 'PLay again?',
@@ -190,3 +244,4 @@ const textNodes = [
 ]
 
 startGame()
+//#endregion
